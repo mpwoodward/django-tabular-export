@@ -1,0 +1,5 @@
+--requirement=requirements-test.txt
+
+wheel
+gitchangelog
+sphinx
