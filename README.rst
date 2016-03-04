@@ -16,7 +16,7 @@ Documentation
 
 This module contains functions which take (headers, rows) pairs and return HttpResponses with either XLSX or
 CSV downloads and Django admin actions which can be added to any ModelAdmin for generic exports. It provides
-two functions (:func:``export_to_csv_response`` and :func:``export_to_xlsx_response``) which take a filename,
+two functions (``export_to_csv_response`` and ``export_to_xlsx_response``) which take a filename,
 a list of column headers, and a Django ``QuerySet``, list-like object, or generator and return a response.
 
 Goals
@@ -25,8 +25,8 @@ Goals
 * This project is not intended to be a general-purpose spreadsheet manipulation library. The only goal is to
   export data quickly and safely.
 * The API is intentionally simple, giving you full control over the display and formatting of headers or your
-  data. :func:``flatten_queryset`` has special handling for only two types of data: ``None`` will be converted to an
-  empty string and :class:`date` or :class:`datetime` instances will serialized using ``isoformat()``. All
+  data. ``flatten_queryset`` has special handling for only two types of data: ``None`` will be converted to an
+  empty string and ``date`` or ``datetime`` instances will serialized using ``isoformat()``. All
   other values will be specified as the text data type to avoid data corruption in Excel if the values happen
   to resemble a date in the current locale.
 * **Unicode-safety**: input values, including lazy objects, are converted using Django's
