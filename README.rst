@@ -53,7 +53,7 @@ Then use it in a project::
     from tabular_export import export_to_csv_response, export_to_xlsx_response, flatten_queryset
 
     def my_view(request):
-        return export_to_csv_response('test.csv', ['Column 1'], [['Data 1'], ['Data 2'], …])
+        return export_to_csv_response('test.csv', ['Column 1'], [['Data 1'], ['Data 2']])
 
 
     def my_other_view(request):
@@ -71,8 +71,8 @@ Then use it in a project::
 
         return export_to_excel_response('numbers.xlsx', headers, my_generator())
 
-    def export_renaming_columns(request)
-        qs = MyModel.objects.filter(…).select_related(…)
+    def export_renaming_columns(request):
+        qs = MyModel.objects.filter(foo="…").select_related("…")
         headers, data = flatten_queryset(qs, field_names=['title', 'related_model__title_en'],
                                          extra_verbose_names={'related_model__title_en': 'English Title'})
         return export_to_csv_response('custom_export.csv', headers, data)
@@ -88,7 +88,6 @@ which make it simple to add “Export to Excel” and “Export to CSV” action
 
     class MyModelAdmin(admin.ModelAdmin):
         actions = (export_to_excel_action, export_to_csv_action)
-        …
 
 The default columns will be the same as you would get calling ``values_list`` on your ``ModelAdmin``'s default
 queryset as returned by ``ModelAdmin.get_queryset()``. If you want to customize this, simply declare a new
@@ -101,7 +100,7 @@ action on your ``ModelAdmin`` which does whatever data preparation is necessary:
 
         def export_batch_summary_action(self, request, queryset):
             headers = ['Batch Name', 'My Computed Field']
-            rows = queryset.annotate(…).values_list('title', 'computed_field_name')
+            rows = queryset.annotate("…").values_list('title', 'computed_field_name')
             return export_to_excel_response('batch-summary.xlsx', headers, rows)
         export_batch_summary_action.short_description = 'Export Batch Summary'
 
