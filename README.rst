@@ -3,11 +3,15 @@ django-tabular-export
 =====================
 
 .. image:: https://landscape.io/github/LibraryOfCongress/django-tabular-export/master/landscape.svg
-   :target: https://landscape.io/github/LibraryOfCongress/django-tabular-export/master
-   :alt: Landscape.io Code Quality
+    :target: https://landscape.io/github/LibraryOfCongress/django-tabular-export/master
+    :alt: Landscape.io Code Quality
 
 .. image:: https://travis-ci.org/LibraryOfCongress/django-tabular-export.png?branch=master
     :target: https://travis-ci.org/LibraryOfCongress/django-tabular-export
+
+.. image:: https://readthedocs.org/projects/django-tabular-export/badge/?version=latest
+    :target: http://django-tabular-export.readthedocs.org/en/latest/?badge=latest
+    :alt: Documentation Status
 
 Simple spreadsheet exports from Django
 
