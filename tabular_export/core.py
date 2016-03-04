@@ -20,6 +20,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import csv
 import datetime
+import sys
 from functools import wraps
 from itertools import chain
 
@@ -185,7 +186,7 @@ class Echo(object):
     # See https://docs.djangoproject.com/en/1.8/howto/outputting-csv/#streaming-csv-files
 
     def write(self, value):
-        return value.encode('utf-8')
+        return value
 
 
 @return_debug_reponse
@@ -202,10 +203,24 @@ def export_to_csv_response(filename, headers, rows):
         for row in rows:
             yield map(convert_value_to_unicode, row)
 
+    if sys.version_info < (3, 0):
+        # On Python 2, csv.writer unconfigurably encodes unicode instances as ASCII
+        # so we need to convert them to UTF-8:
+        row_generator = force_utf8_encoding(row_generator)
+
     # This works because csv.writer.writerow calls the underlying file-like .write method
-    # and returns the result. We cannot use the same approach for Excel because xlsxwriter
+    # *and* returns the result. We cannot use the same approach for Excel because xlsxwriter
     # doesn't have a way to emit chunks from ZipFile and StreamingHttpResponse does not
     # offer a file-like handle.
 
     return StreamingHttpResponse((writer.writerow(row) for row in row_generator()),
-                                 content_type='text/csv')
+                                 content_type='text/csv; charset=utf-8')
+
+
+def force_utf8_encoding(f):
+    @wraps(f)
+    def inner():
+        for row in f():
+            yield [i.encode('utf-8') for i in row]
+
+    return inner

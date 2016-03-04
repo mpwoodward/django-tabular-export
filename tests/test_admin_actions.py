@@ -59,7 +59,7 @@ class TestAdminActions(TestCase):
         self.assertIn('Content-Disposition', response)
         self.assertEqual("attachment; filename*=UTF-8''test%20models.csv",
                          response['Content-Disposition'])
-        self.assertEqual('text/csv',
+        self.assertEqual('text/csv; charset=utf-8',
                          response['Content-Type'])
 
         content = list(i.decode('utf-8') for i in response.streaming_content)

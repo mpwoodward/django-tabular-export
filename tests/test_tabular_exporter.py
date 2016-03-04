@@ -153,7 +153,7 @@ class ResponseTests(SimpleTestCase):
         headers, rows = self.get_test_data()
         resp = export_to_csv_response('test.csv', headers, rows)
         content = [i.decode('utf-8') for i in resp.streaming_content]
-        self.assertEqual('text/csv', resp['Content-Type'])
+        self.assertEqual('text/csv; charset=utf-8', resp['Content-Type'])
         self.assertEqual("attachment; filename*=UTF-8''test.csv", resp['Content-Disposition'])
         self.assertEqual(content, ['Foo Column,Bar Column\r\n',
                                    '1,2\r\n', '3,4\r\n', 'abc,def\r\n',
@@ -170,11 +170,11 @@ class ResponseTests(SimpleTestCase):
         self.assertInHTML('<th>Foo Column</th>', ''.join(i.decode('utf-8') for i in resp.streaming_content))
 
     def test_export_csv_using_generator(self):
-        headers = ['A Number']
+        headers = ['A Number', 'Status']
 
         def my_generator():
             for i in range(0, 1000):
-                yield (i, )
+                yield (i, u'\N{WARNING SIGN}')
 
         resp = export_to_csv_response('numbers.csv', headers, my_generator())
         self.assertIsInstance(resp, StreamingHttpResponse)
@@ -184,15 +184,15 @@ class ResponseTests(SimpleTestCase):
         content = list(i.decode('utf-8') for i in resp.streaming_content)
         # We should have one header row + 1000 content rows:
         self.assertEqual(len(content), 1001)
-        self.assertEqual(content[0], 'A Number\r\n')
-        self.assertEqual(content[-1], '999\r\n')
+        self.assertEqual(content[0], u'A Number,Status\r\n')
+        self.assertEqual(content[-1], u'999,\u26a0\r\n')
 
     def test_export_excel_using_generator(self):
-        headers = ['A Number']
+        headers = ['A Number', 'Status']
 
         def my_generator():
             for i in range(0, 1000):
-                yield (i, )
+                yield (i, u'\N{WARNING SIGN}')
 
         resp = export_to_excel_response('numbers.xlsx', headers, my_generator())
         # xlsxwriter doesn't allow streaming generation of XLSX files:
